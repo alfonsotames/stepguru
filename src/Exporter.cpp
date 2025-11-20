@@ -5,6 +5,7 @@
 #include "MeshExtractor.hpp"
 #include "GlbBuilder.hpp"
 #include "PngRenderer.hpp"
+#include "JsonExporter.hpp"
 
 #include <iostream>
 #include <thread>
@@ -113,6 +114,28 @@ bool Exporter::exportAssemblyAndComponents(const Options& opt)
         }
     }
     std::cout << "====================================================\n\n";
+
+
+    //----------------- Json Tree dump -----------------------------
+    std::cout << "\n JSON → Export\n";
+    {
+        TDF_LabelSequence roots;
+        shapeTool->GetFreeShapes(roots);
+
+        if (roots.Length() == 0) {
+            std::cerr << "ERROR: No free shapes in STEP document.\n";
+        } else {
+            TDF_Label root = roots.First();
+            std::string jsonOut = opt.outDir  + "assembly.json";
+            std::cout << "\n File: " << jsonOut << std::endl;
+            if (!JsonExporter::Export(root, shapeTool, colorTool, jsonOut)) {
+                std::cerr << "ERROR: Failed to write JSON assembly file\n";
+            }
+        }
+    }
+
+    //-----------------------------------------------------------
+
 
     // Assembly components (shallow)
     TDF_LabelSequence assemblyComps;
