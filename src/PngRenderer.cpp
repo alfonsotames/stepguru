@@ -20,6 +20,17 @@
 
 #include <iostream>
 
+/*
+    Note that in Linux this will need to install:
+    
+    $ sudo apt-get install xvfb
+
+    And then run the server:
+
+    $ Xvfb :99 -screen 0 1024x768x24 &
+    $ export DISPLAY=:99
+
+*/
 bool RenderPNG(const std::vector<TopoDS_Shape>& shapes,
                const std::vector<RGBA>&         colors,
                const std::string&               pngFile)
